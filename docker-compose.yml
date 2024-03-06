@@ -1,0 +1,33 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=my_database;Username=yeet4000;Password=56#SkattePARADIS;
+
+
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=my_database
+      - POSTGRES_USER=yeet4000
+      - POSTGRES_PASSWORD=56#SkattePARADIS
+
+  proxy:
+    image: caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
