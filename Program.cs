@@ -6,21 +6,41 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
+
+// Configure DbContext to use SQLite in development and PostgreSQL in production
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseSqlite(connectionString));
+}
+else
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseNpgsql(connectionString));
+}
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Call the database initializer
+// Initialize the database or apply migrations
 using (var services = app.Services.CreateScope())
 {
     var db = services.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    ApplicationDbInitializer.Initialize(db);
+    if (app.Environment.IsDevelopment())
+    {
+        ApplicationDbInitializer.Initialize(db);
+    }
+    else
+    {
+        // Apply pending migrations or create the database if it doesn't exist
+        await db.Database.MigrateAsync();
+    }
 }
 
 // Configure the HTTP request pipeline.
