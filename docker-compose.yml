@@ -6,7 +6,6 @@ services:
       - "8080:80"
     depends_on:
       - db
-    command: ["./wait-for-it.sh", "db:5432", "--", "dotnet", "Example.dll"]
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=my_database;Username=yeet4000;Password=56#SkattePARADIS;
