@@ -1,7 +1,9 @@
 version: '3'
 services:
   web:
-    build: .
+    build:
+      context: .
+      target: final
     ports:
       - "8080:80"
     depends_on:
@@ -9,7 +11,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=assignment5;Username=hiphopgutt1;Password=hiphopgutt1;
-
 
   db:
     image: postgres
@@ -27,6 +28,19 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
+
+  migration:
+    build:
+      context: .
+      target: migration-env
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=assignment5;Username=hiphopgutt1;Password=hiphopgutt1;
+    volumes:
+      - .:/app
+    entrypoint: ["dotnet", "ef"]
 
 volumes:
   caddy_data:
