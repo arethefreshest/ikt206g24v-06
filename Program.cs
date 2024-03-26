@@ -1,8 +1,16 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Example.Data;
+using Microsoft.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+builder.Logging.AddEventSourceLogger();
+builder.Logging.SetMinimumLevel(LogLevel.Information);
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -17,6 +25,10 @@ else
 {
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseNpgsql(connectionString));
+
+        using var scope = builder.Services.BuildServiceProvider().CreateScope();
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        dbContext.Database.Migrate();
 }
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
