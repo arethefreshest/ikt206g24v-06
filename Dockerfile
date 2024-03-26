@@ -22,7 +22,7 @@ COPY --from=build-env /app/out .
 COPY --from=build-env /app/Example.csproj .
 
 # Runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
 COPY --from=build-env /app/out .
 
