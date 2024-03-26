@@ -8,15 +8,15 @@ services:
       - db
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=my_database;Username=yeet4000;Password=56#SkattePARADIS;
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=assignment5;Username=hiphopgutt1;Password=hiphopgutt1;
 
 
   db:
     image: postgres
     environment:
-      - POSTGRES_DB=my_database
-      - POSTGRES_USER=yeet4000
-      - POSTGRES_PASSWORD=56#SkattePARADIS
+      - POSTGRES_DB=assignment5
+      - POSTGRES_USER=hiphopgutt1
+      - POSTGRES_PASSWORD=hiphopgutt1
 
   proxy:
     image: caddy
