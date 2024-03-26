@@ -264,4 +264,3 @@
 /Users/yeet4000/ikt206g24v-05/obj/Debug/net8.0/Example.pdb
 /Users/yeet4000/ikt206g24v-05/obj/Debug/net8.0/Example.genruntimeconfig.cache
 /Users/yeet4000/ikt206g24v-05/obj/Debug/net8.0/ref/Example.dll
-/Users/yeet4000/ikt206g24v-05/bin/Debug/net8.0/app.db
