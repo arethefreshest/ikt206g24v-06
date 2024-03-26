@@ -25,10 +25,6 @@ else
 {
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseNpgsql(connectionString));
-
-        using var scope = builder.Services.BuildServiceProvider().CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        dbContext.Database.Migrate();
 }
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -41,29 +37,28 @@ builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
 // Initialize the database or apply migrations
-using (var services = app.Services.CreateScope())
+if (app.Environment.IsProduction()) // Only apply migrations in production
 {
-    var db = services.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    if (app.Environment.IsDevelopment())
+    using (var scope = app.Services.CreateScope())
     {
-        ApplicationDbInitializer.Initialize(db);
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        db.Database.Migrate(); // Apply migrations synchronously
     }
-    else
+}
+else if (app.Environment.IsDevelopment())
+{
+    using (var scope = app.Services.CreateScope())
     {
-        // Apply pending migrations or create the database if it doesn't exist
-        await db.Database.MigrateAsync();
+        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        // Database initialization for development, if needed
+        ApplicationDbInitializer.Initialize(db);
     }
 }
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseMigrationsEndPoint();
-}
-else
+if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
