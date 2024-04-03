@@ -3,7 +3,7 @@ services:
   web:
     image: areberntsen/ikt206g24v06:latest # Using image from Docker Hub
     ports:
-      - "8080:80"
+      - "8081:80"
     depends_on:
       - db
     environment:
@@ -24,8 +24,8 @@ services:
   proxy:
     image: caddy
     ports:
-      - "80:80"
-      - "443:443"
+      - "8082:80"
+      - "444:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
