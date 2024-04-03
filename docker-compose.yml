@@ -1,9 +1,7 @@
 version: '3'
 services:
   web:
-    build:
-      context: .
-      target: final
+    image: areberntsen/ikt206g24v06:latest # Using image from Docker Hub
     ports:
       - "8080:80"
     depends_on:
@@ -11,6 +9,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=assignment5;Username=hiphopgutt1;Password=hiphopgutt1;
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
 
   db:
     image: postgres
@@ -31,18 +31,13 @@ services:
       - caddy_data:/data
       - caddy_config:/config
 
-  migration:
-    build:
-      context: .
-      target: migration-env
-    depends_on:
-      - db
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=assignment5;Username=hiphopgutt1;Password=hiphopgutt1;
+  watchtower:
+    image: containrrr/watchtower
     volumes:
-      - .:/app
-    entrypoint: ["dotnet", "ef"]
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30 --label-enable --cleanup --name watchtower
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
 
 volumes:
   db_data:
