@@ -1,3 +1,10 @@
+{
+    log {
+        output stdout
+        format single_field common_log
+    }
+}
+
 are.devopsgutta.site {
     reverse_proxy web:80
 }

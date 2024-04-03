@@ -9,6 +9,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=assignment5;Username=hiphopgutt1;Password=hiphopgutt1;
+      - ASPNETCORE_URLS=http://+:80
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
