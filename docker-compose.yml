@@ -9,7 +9,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=assignment5;Username=hiphopgutt1;Password=hiphopgutt1;
-      - ASPNETCORE_URLS=http://+:80
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
 
@@ -34,8 +33,6 @@ services:
 
   watchtower:
     image: containrrr/watchtower
-    ports:
-      - "8080:80"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /etc/docker/config.json:/config.json
