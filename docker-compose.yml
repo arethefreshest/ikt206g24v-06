@@ -24,8 +24,8 @@ services:
   proxy:
     image: caddy
     ports:
-      - "8082:80"
-      - "444:443"
+      - "8090:80"
+      - "8444:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
