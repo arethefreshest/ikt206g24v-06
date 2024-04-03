@@ -10,11 +10,19 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Build and push Docker image
+      - name: Print environment information and Docker version
         run: |
           set -x
           echo "DOCKER_USERNAME is set to $DOCKER_USERNAME"
           echo "DOCKER_PASSWORD is set to $DOCKER_PASSWORD"
+          docker --version
+          which docker
+      - name: Build and push Docker image
+        run: |
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          if [ $? -ne 0 ]; then
+            echo "Docker login failed"
+            exit 1
+          fi
           docker build -t areberntsen/ikt206g24v06:latest .
           docker push areberntsen/ikt206g24v06:latest
